@@ -2,7 +2,6 @@ from flask import Flask, redirect, url_for, request, jsonify
 from app.services import openAI_service, pinecone_service, scrapping_service
 from app.utils.utils_functions import *
 from . import api_blueprint
-# app = Flask(__name__)
 
 # Only one index - no need to get into .env
 PINECONE_INDEX_NAME = 'index42'
@@ -27,4 +26,5 @@ def handle_query():
     context_chunks = pinecone_service.get_most_similar_chunks_for_query(question, PINECONE_INDEX_NAME)
     prompt = build_prompt(question, context_chunks)
     answer = openAI_service.get_llm_answer(prompt)
-    return jsonify({ "question": question, "answer": answer })    
+    cleaned_answer = answer.strip()
+    return jsonify({ "question": question, "answer": cleaned_answer })    
