@@ -2,6 +2,7 @@ import os
 import json
 import requests
 from openai import OpenAI
+import time
 
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 OPENAI_EMBEDDING_MODEL = 'text-embedding-ada-002'
