@@ -9,7 +9,8 @@ function UrlInput({ onSubmit }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/embed-and-store', {
+		console.log("URL to embedded :", url)
+      	const response = await fetch('http://localhost:5000/embed-and-store', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

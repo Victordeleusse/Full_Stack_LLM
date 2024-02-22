@@ -12,6 +12,7 @@ function App() {
   };
   // To delete the Pinecone index when the user leaves the page
   useEffect(() => {
+    console.log("DELETING INDEX !")
     return () => {
       fetch('http://localhost:5000/delete-index', {
         method: 'POST',

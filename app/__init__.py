@@ -1,11 +1,10 @@
+import os
 from flask import Flask
 from flask_cors import CORS
-import os
+from app.api.routes import api_blueprint
 
 def create_app():
     app = Flask(__name__)
-    if os.environ.get('FLASK_ENV') == 'development':
-        CORS(app)
-    from app.api.routes import api_blueprint
+    CORS(app, resources={r"/*": {"origins": "*"}})
     app.register_blueprint(api_blueprint)
     return app

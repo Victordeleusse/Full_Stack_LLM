@@ -1,9 +1,13 @@
 import os
+import requests
+import json
 import pinecone
 from pinecone import Pinecone, ServerlessSpec, PodSpec
 from app.services.openAI_service import *
 import time
-# import openai
+from dotenv import load_dotenv
+
+load_dotenv()
 
 PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
 pc = Pinecone(api_key=PINECONE_API_KEY, environment="gcp-starter")
@@ -67,5 +71,7 @@ def get_most_similar_chunks_for_query(query, index_name):
     return context_chunks
 
 def delete_index(index_name):
-  if index_name in pinecone.list_indexes():
-    pinecone.delete_index(name=index_name)
+    print(f"index name to DELETE {index_name}")
+    if index_name in pc.list_indexes().names():
+        print(f"index name ready to be deleted : {index_name}")
+        pc.delete_index(name=index_name)

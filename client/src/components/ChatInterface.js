@@ -47,6 +47,7 @@ function ChatInterface() {
       var { value, done } = await reader.read();
       if (done) break;
       accumulatedAnswer += value;
+	  // eslint-disable-next-line no-loop-func
       setMessages(currentHistory => {
         const updatedHistory = [...currentHistory]
         const lastChatIndex = updatedHistory.length - 1
@@ -59,7 +60,7 @@ function ChatInterface() {
     }
   };
 
-  
+
   return (
     <div className="chat-container">
       <header className="chat-header">URL Question & Answer</header>

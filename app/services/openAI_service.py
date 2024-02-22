@@ -1,11 +1,7 @@
 import os
 import json
 import requests
-import openai
-from openai import OpenAI
-from utils.utils_functions import *
-
-client = OpenAI()
+from app.utils.utils_functions import *
 
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
