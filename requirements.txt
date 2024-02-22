@@ -5,4 +5,5 @@ openai
 pinecone-client
 flask-cors
 python-dotenv
-dotenv
+gunicorn
+sseclient-py

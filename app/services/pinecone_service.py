@@ -24,11 +24,6 @@ def safe_request(chunk):
             error_message = str(e)
             print(f"ERROR while embedding : {error_message}")
             exponential_backoff(attempt)
-            # if "rate limit" in error_message.lower():
-            #     print("Rate limit reached, backing off...")
-            #     exponential_backoff(attempt)
-            # else:
-            #     raise
 
 # "Vectorisation/Embedding" and storage process in Pinecone
 def embed_chunks_and_upload_to_pinecone(chunks, index_name):
@@ -70,3 +65,7 @@ def get_most_similar_chunks_for_query(query, index_name):
     query_results = index.query(vector=question_embedding, top_k=3, include_metadata=True)
     context_chunks = [x["metadata"]["chunk_text"] for x in query_results["matches"]]
     return context_chunks
+
+def delete_index(index_name):
+  if index_name in pinecone.list_indexes():
+    pinecone.delete_index(name=index_name)
