@@ -1,7 +1,4 @@
 import os
-import requests
-import json
-import pinecone
 from pinecone import Pinecone, ServerlessSpec, PodSpec
 from app.services.openAI_service import *
 import time
@@ -21,6 +18,7 @@ def exponential_backoff(attempt):
 def safe_request(chunk):
     for attempt in range(MAX_ATTEMPTS):
         try:
+            print(f"In SAFE REQUEST : {chunk}")
             embedding = get_embedding(chunk)
             return embedding
         # except openai.error.RateLimitError as e:
@@ -31,14 +29,10 @@ def safe_request(chunk):
 
 # "Vectorisation/Embedding" and storage process in Pinecone
 def embed_chunks_and_upload_to_pinecone(chunks, index_name):
-    # Only one index unique avalaible in the free version
-    # print(f"LIST INDEX : {pc.list_indexes().names()}")
     print(index_name)
     if index_name in pc.list_indexes().names():
         print("\nIndex already exists. Deleting index ...")
         pc.delete_index(name=index_name)
-    # To create a new index in pinecone
-    # EMBEDDING_DIMENSION is based on what the OpenAI embedding model outputs
     print("\nCreating a new index: ", index_name)
     pc.create_index(
         name=index_name,
@@ -54,7 +48,6 @@ def embed_chunks_and_upload_to_pinecone(chunks, index_name):
     for i, chunk in enumerate(chunks):
         embedding = safe_request(chunk)
         embeddings_with_ids.append((str(i), embedding, chunk))
-        # time.sleep(21) #3 requests per minute
     # Pairing embeddings and relevant texts both with id association
     print("\nUploading chunks to Pinecone ...")
     upserts = [(id, vec, {"chunk_text": text}) for id, vec, text in embeddings_with_ids]
@@ -71,7 +64,8 @@ def get_most_similar_chunks_for_query(query, index_name):
     return context_chunks
 
 def delete_index(index_name):
-    print(f"index name to DELETE {index_name}")
     if index_name in pc.list_indexes().names():
         print(f"index name ready to be deleted : {index_name}")
-        pc.delete_index(name=index_name)
+        pc.delete_index(name=index_name)    
+    print(f"index {index_name} ready to be pushed in database")
+        

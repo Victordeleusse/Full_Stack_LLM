@@ -10,13 +10,13 @@ function UrlInput({ onSubmit }) {
     setLoading(true);
     try {
 		console.log("URL to embedded :", url)
-      	const response = await fetch('http://localhost:5000/embed-and-store', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ url }),
-      });
+		const response = await fetch('http://localhost:5000/embed-and-store', {
+			method: 'POST',
+			headers: {
+			  'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ url }),
+		  });
       if (response.ok) {
         const data = await response.json();
         setResponseMessage(data.message);

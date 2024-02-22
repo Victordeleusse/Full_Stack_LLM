@@ -15,17 +15,24 @@ PINECONE_INDEX_NAME = "index42"
 # To scrap the URL, embed the texts, andupload to the vector database.
 @api_blueprint.route("/embed-and-store", methods=["POST", "OPTIONS"])
 def embed_and_store():
+    if request.method == "OPTIONS":  # Let flask_cors handle the preflight
+        return {}, 200  # A simple 200 OK, or let flask_cors handle it automatically
+
+    print("ENDPOINT embed-and-store reached")
+    print("Headers:", request.headers)
+    print("Data:", request.data)
     try:
         url = request.json.get("url")
+        print(f"URL : {url}")
         if not url:
             return jsonify({"message": "URL is required"}), 400
-        print(f"URL : {url}")
         url_text = scrapping_service.scrape_website(url)
         chunks = chunk_text(url_text)
         pinecone_service.embed_chunks_and_upload_to_pinecone(chunks, PINECONE_INDEX_NAME)
         response_json = {"message": "Chunks embedded and stored successfully"}
         return jsonify(response_json), 200
     except Exception as e:
+        print(f"An error occurred: {str(e)}")
         return jsonify({"message": f"An error occurred: {str(e)}"}), 500
 
 
