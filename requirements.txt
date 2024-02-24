@@ -7,5 +7,5 @@ flask-cors
 flask-socketio
 python-dotenv
 gunicorn
-socket.io-client
+python-socketio[client]
 # sseclient-py

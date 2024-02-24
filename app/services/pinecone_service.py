@@ -6,7 +6,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
+# PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
+PINECONE_API_KEY='54cfd832-9a97-4589-ac31-100881fb8111'
 pc = Pinecone(api_key=PINECONE_API_KEY, environment="gcp-starter")
 EMBEDDING_DIMENSION = 1536
 MAX_ATTEMPTS = 5
