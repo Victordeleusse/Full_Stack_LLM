@@ -1,4 +1,4 @@
-from flask import Flask, Response, request, jsonify
+from flask import Flask
 from flask_cors import CORS
 from app.api.routes import api_blueprint
 from flask_socketio import SocketIO, emit
@@ -15,7 +15,7 @@ def create_app():
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
     app.register_blueprint(api_blueprint)
     socketio.init_app(app) 
-    return app
+    return app, socketio
 
 @socketio.on('connect')
 def handle_connect():

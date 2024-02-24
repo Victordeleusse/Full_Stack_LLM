@@ -11,8 +11,8 @@ pc = Pinecone(api_key=PINECONE_API_KEY, environment="gcp-starter")
 EMBEDDING_DIMENSION = 1536
 MAX_ATTEMPTS = 5
 
+# Wait for 21+ seconds to match 3 request per min max. 
 def exponential_backoff(attempt):
-    # Wait for 21+ seconds to match 3 request per min max. 
     time.sleep(21)
 
 def safe_request(chunk):
@@ -27,7 +27,6 @@ def safe_request(chunk):
             print(f"ERROR while embedding : {error_message}, let s wait for 20+ secs")
             exponential_backoff(attempt)
 
-# "Vectorisation/Embedding" and storage process in Pinecone
 def embed_chunks_and_upload_to_pinecone(chunks, index_name):
     print(index_name)
     if index_name in pc.list_indexes().names():

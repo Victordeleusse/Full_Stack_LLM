@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    volumes:
+      - ./app:/app/app
+      - ./run.py:/app/run.py
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_APP: run.py
+      FLASK_ENV: development
+      FLASK_RUN_HOST: 0.0.0.0
+
+  client:
+    build:
+      context: ./client
+    volumes:
+      - ./client/src:/app/src
+      - ./client/public:/app/public
+    ports:
+      - "3000:3000"
+    depends_on:
+      - app
