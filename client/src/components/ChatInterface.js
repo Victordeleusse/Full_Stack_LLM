@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ChatMessage from './ChatMessage';
 
-// Messages state variable -> to store the history of our chat messages (user and bot)
-
 function ChatInterface() {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const messagesEndRef = useRef(null);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -15,62 +14,67 @@ function ChatInterface() {
 
   const handleSendMessage = async (event) => {
     event.preventDefault();
-
-    if (!inputText.trim()) return; 
-
+  
+    if (!inputText.trim()) return;
+  
     const userMessage = { text: inputText, isBot: false };
-    const body = {
-      chatHistory: [...messages, userMessage],
+    setMessages(messages => [...messages, userMessage]);
+  
+    const chatHistory = messages.map(message => ({ text: message.text, isBot: message.isBot }));
+    chatHistory.push(userMessage);
+  
+    const requestBody = {
       question: inputText,
-    }    
-
-    // Add a new empty bot message to the UI
-    const botMessage = { text: '', isBot: true };
-    setMessages([...messages, userMessage, botMessage]);
-    setInputText('');
-
-    // Send the user's message to the server and wait for a response.
-    // This response will be streamed to this component.
-    const response = await fetch('http://localhost:5000/handle-query', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    if (!response.body) return;
-
-    // Set up the infrastructure to stream the response data
-    let decoder = new TextDecoderStream();
-    const reader = response.body.pipeThrough(decoder).getReader()    
-    let accumulatedAnswer = ""
-
-    while (true) {
-      var { value, done } = await reader.read();
-      if (done) break;
-      accumulatedAnswer += value;
-	  // eslint-disable-next-line no-loop-func
-      setMessages(currentHistory => {
-        const updatedHistory = [...currentHistory]
-        const lastChatIndex = updatedHistory.length - 1
-        updatedHistory[lastChatIndex] = {
-          ...updatedHistory[lastChatIndex],
-          text: accumulatedAnswer
-        }
-        return updatedHistory
-      })
+      chatHistory: chatHistory,
+    };
+  
+    try {
+        console.log("Request from FRONT :", requestBody.question)
+        const response = await fetch('http://localhost:5000/handle-query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody),
+        });
+        const data = await response.json();
+        if (data.answer) {
+          const botMessage = { text: data.answer, isBot: true };
+          setMessages(messages => [...messages, botMessage]);
+        } else {
+          console.error("No answer received from the backend.");}
+    } 
+    catch (error) {
+      console.error("Failed to fetch:", error);
     }
-  };
 
+    setInputText(''); 
+};
+  //   setInputText('');
+  
+  //   if (response.ok && response.body) {
+  //     const reader = response.body.getReader();
+  //     reader.read().then(function processText({ done, value }) {
+  //       if (done) {
+  //         console.log("Stream complete");
+  //         return;
+  //       }
+  
+  //       const decoder = new TextDecoder();
+  //       const text = decoder.decode(value);
+  //       const data = JSON.parse(text);
+  
+  //       const botMessage = { text: data.answer, isBot: true };
+  //       setMessages(messages => [...messages, botMessage]);
+  
+  //       return reader.read().then(processText);
+  //     });
+  //   } else {
+  //     console.error("Failed to fetch");
+  //   }
+  // };
 
   return (
     <div className="chat-container">
-      <header className="chat-header">URL Question & Answer</header>
-      {
-        messages.length === 0 
-          && 
-        <div className="chat-message bot-message">
-          <p className="initial-message">Hi there! I'm a bot trained to answer questions about the URL you entered. Try asking me a question below!</p>
-        </div>
-      }
+      <header className="chat-header">Chat with Bot</header>
       <div className="chat-messages">
         {messages.map((message, index) => (
           <ChatMessage key={index} message={message} />
@@ -83,7 +87,9 @@ function ChatInterface() {
           placeholder="Type a question and press enter ..."
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
+          required
         />
+        <button type="submit">Send</button>
       </form>
     </div>
   );

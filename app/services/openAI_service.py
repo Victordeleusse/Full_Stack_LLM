@@ -33,16 +33,5 @@ def construct_llm_payload(question, context_chunks, chat_history):
     print("\n==== PROMPT ====\n")
     print(prompt)
     # Construct messages array to send to OpenAI
-    messages = construct_messages_list(chat_history, prompt)
-    return messages
-
-    # response = client.completions.create(model=CHATGPT_MODEL,
-    # prompt=messages,
-    # temperature=1,
-    # max_tokens=500,
-    # n=1,
-    # stop=None,
-    # presence_penalty=0,
-    # frequency_penalty=0.1)
-    # completion_text = response.choices[0].text
-    # return completion_text
+    # messages = construct_messages_list(chat_history, prompt)
+    return prompt

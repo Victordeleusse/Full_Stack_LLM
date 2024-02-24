@@ -18,13 +18,13 @@ def exponential_backoff(attempt):
 def safe_request(chunk):
     for attempt in range(MAX_ATTEMPTS):
         try:
-            print(f"In SAFE REQUEST : {chunk}")
             embedding = get_embedding(chunk)
+            print(f"In SAFE REQUEST EMBEDDING : {embedding}")
             return embedding
         # except openai.error.RateLimitError as e:
         except Exception as e:
             error_message = str(e)
-            print(f"ERROR while embedding : {error_message}")
+            print(f"ERROR while embedding : {error_message}, let s wait for 20+ secs")
             exponential_backoff(attempt)
 
 # "Vectorisation/Embedding" and storage process in Pinecone

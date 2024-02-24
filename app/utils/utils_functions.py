@@ -1,5 +1,6 @@
 PROMPT_LIMIT = 3750
-CHATGPT_MODEL = 'gpt-4-1106-preview'
+# CHATGPT_MODEL = 'gpt-4-1106-preview'
+CHATGPT_MODEL = "gpt-3.5-turbo-instruct"
 
 # To get our text chunked before embedding it
 def chunk_text(text, chunk_size=200):
@@ -25,6 +26,7 @@ def build_prompt(query, context_chunks):
         "Context:\n")
     prompt_end = (f"\n\nQuestion: {query}\nAnswer:")
     prompt = ""
+    # print(f"LEN of context_chunks {len(context_chunks)}")
     for i in range(1, len(context_chunks)):
         if len("\n\n---\n\n".join(context_chunks[:i])) >= PROMPT_LIMIT:
             prompt = (
@@ -39,15 +41,15 @@ def build_prompt(query, context_chunks):
                 prompt_end)
     return prompt
 
-def construct_messages_list(chat_history, prompt):
-    messages = [{"role": "system", "content": "You are a helpful assistant."}]
-    # Populate the messages array with the current chat history
-    for message in chat_history:
-        if message['isBot']:
-            messages.append({"role": "system", "content": message["text"]})
-        else:
-            messages.append({"role": "user", "content": message["text"]})
-    # Replace last message with the full prompt
-    messages[-1]["content"] = prompt    
-    return messages
+# def construct_messages_list(chat_history, prompt):
+#     messages = [{"role": "system", "content": "You are a helpful assistant."}]
+#     # Populate the messages array with the current chat history
+#     for message in chat_history[-5:]:
+#         if message['isBot']:
+#             messages.append({"role": "system", "content": message["text"]})
+#         else:
+#             messages.append({"role": "user", "content": message["text"]})
+#     # Replace last message with the full prompt
+#     messages[-1]["content"] = prompt    
+#     return messages
 

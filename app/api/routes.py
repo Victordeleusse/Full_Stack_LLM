@@ -6,6 +6,8 @@ from app.utils.utils_functions import *
 import sseclient
 import requests
 from flask_cors import CORS
+from openai import OpenAI
+import time
 
 # api_blueprint = Blueprint('api_blueprint', __name__)
 
@@ -40,36 +42,34 @@ def embed_and_store():
 # Build the prompt for the LLM and sending it to the API -> answer.
 @api_blueprint.route("/handle-query", methods=["POST", "OPTIONS"])
 def handle_query():
-    question = request.json["question"]
-    chat_history = request.json["chatHistory"]
-    context_chunks = pinecone_service.get_most_similar_chunks_for_query(
-        question, PINECONE_INDEX_NAME
-    )
-    prompt = build_prompt(question, context_chunks)
-    messages = openAI_service.construct_llm_payload(prompt, context_chunks, chat_history)
-    
-    def generate():
-        response = client.completions.create(model=CHATGPT_MODEL,
-            prompt=messages,
-            temperature=1,
-            max_tokens=500,
-            n=1,
-            stop=None,
-            presence_penalty=0,
-            frequency_penalty=0.1)
-        completion_text = response.choices[0].text
-        cleaned_answer = completion_text.strip()
-        client = sseclient.SSEClient(response)
-        for event in client.events():
-            if event.data != '[DONE]':
-                try:
-                    text = json.loads(event.data)['choices'][0]['delta']['content']
-                    yield(text)
-                except:
-                    yield('')
-
-    # Return the streamed response from the LLM to the frontend
-    return Response(stream_with_context(generate()))
+    # if request.method == "OPTIONS":  # To make flask_cors handle the preflight -> Work on it
+    #     return {}, 200 
+    try:
+        question = request.json["question"]
+        print(f"Question from FRONT received in the BACK : {question}")
+        chat_history = request.json["chatHistory"]
+        context_chunks = pinecone_service.get_most_similar_chunks_for_query(
+            question, PINECONE_INDEX_NAME
+        )
+        # print(f"CONTEXT CHUNCK in the BACK : {context_chunks}")
+        messages = openAI_service.construct_llm_payload(question, context_chunks, chat_history)
+        def generate():
+            client = OpenAI()
+            response = client.completions.create(
+                model=CHATGPT_MODEL,
+                prompt=messages,
+                temperature=1,
+                max_tokens=500,
+                n=1,
+                presence_penalty=0,
+                frequency_penalty=0.1,
+                stop=["\n", " Human:", " AI:"])
+            answer = response.choices[0].text.strip()
+            print(f"RESPONSE from OPENAI : {answer}")
+            yield f"data: {{\"text\": \"{answer}\"}}\n\n"
+        return Response(generate(), content_type='text/event-stream')
+    except Exception as e:
+        return Response(f"data: {{\"error\": \"{str(e)}\"}}\n\n", content_type='text/event-stream')
 
 
 # App.js component unmounts calling
