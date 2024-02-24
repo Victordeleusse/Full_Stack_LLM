@@ -4,6 +4,8 @@ beautifulsoup4
 openai
 pinecone-client
 flask-cors
+flask-socketio
 python-dotenv
 gunicorn
-sseclient-py
+socket.io-client
+# sseclient-py

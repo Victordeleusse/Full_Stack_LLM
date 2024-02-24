@@ -1,15 +1,8 @@
-import os
 from . import api_blueprint
-from flask import Blueprint, Flask, redirect, url_for, Response, request, jsonify, stream_with_context, json, make_response
+from flask import Response, request, jsonify
 from app.services import openAI_service, pinecone_service, scrapping_service
 from app.utils.utils_functions import *
-import sseclient
-import requests
-from flask_cors import CORS
 from openai import OpenAI
-import time
-
-# api_blueprint = Blueprint('api_blueprint', __name__)
 
 # Only one index - no need to get into .env
 PINECONE_INDEX_NAME = "index42"
@@ -42,35 +35,34 @@ def embed_and_store():
 # Build the prompt for the LLM and sending it to the API -> answer.
 @api_blueprint.route("/handle-query", methods=["POST", "OPTIONS"])
 def handle_query():
-    # if request.method == "OPTIONS":  # To make flask_cors handle the preflight -> Work on it
-    #     return {}, 200 
-    try:
-        question = request.json["question"]
-        print(f"Question from FRONT received in the BACK : {question}")
-        chat_history = request.json["chatHistory"]
-        context_chunks = pinecone_service.get_most_similar_chunks_for_query(
-            question, PINECONE_INDEX_NAME
-        )
-        # print(f"CONTEXT CHUNCK in the BACK : {context_chunks}")
-        messages = openAI_service.construct_llm_payload(question, context_chunks, chat_history)
-        def generate():
-            client = OpenAI()
-            response = client.completions.create(
-                model=CHATGPT_MODEL,
-                prompt=messages,
-                temperature=1,
-                max_tokens=500,
-                n=1,
-                presence_penalty=0,
-                frequency_penalty=0.1,
-                stop=["\n", " Human:", " AI:"])
-            answer = response.choices[0].text.strip()
-            print(f"RESPONSE from OPENAI : {answer}")
-            yield f"data: {{\"text\": \"{answer}\"}}\n\n"
-        return Response(generate(), content_type='text/event-stream')
-    except Exception as e:
-        return Response(f"data: {{\"error\": \"{str(e)}\"}}\n\n", content_type='text/event-stream')
-
+    if request.method == "OPTIONS":  # To make flask_cors handle the preflight -> Work on it
+        return {}, 200 
+    # try:
+    #     question = request.json["question"]
+    #     print(f"Question from FRONT received in the BACK : {question}")
+    #     chat_history = request.json["chatHistory"]
+    #     context_chunks = pinecone_service.get_most_similar_chunks_for_query(
+    #         question, PINECONE_INDEX_NAME
+    #     )
+    #     # print(f"CONTEXT CHUNCK in the BACK : {context_chunks}")
+    #     messages = openAI_service.construct_llm_payload(question, context_chunks, chat_history)
+    #     def generate():
+    #         client = OpenAI()
+    #         response = client.completions.create(
+    #             model=CHATGPT_MODEL,
+    #             prompt=messages,
+    #             temperature=1,
+    #             max_tokens=500,
+    #             n=1,
+    #             presence_penalty=0,
+    #             frequency_penalty=0.1,
+    #             stop=["\n", " Human:", " AI:"])
+    #         answer = response.choices[0].text.strip()
+    #         print(f"RESPONSE from OPENAI : {answer}")
+    #         yield f"data: {{\"text\": \"{answer}\"}}\n\n"
+    #     return Response(generate(), content_type='text/event-stream')
+    # except Exception as e:
+    #     return Response(f"data: {{\"error\": \"{str(e)}\"}}\n\n", content_type='text/event-stream')
 
 # App.js component unmounts calling
 # -> to delete this only index we can have and create it again for every new page visit.
