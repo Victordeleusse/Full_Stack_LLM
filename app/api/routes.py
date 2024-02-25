@@ -10,7 +10,7 @@ PINECONE_INDEX_NAME = "index42"
 @api_blueprint.route("/", methods=["POST", "GET", "OPTIONS"])
 def home():
     print(f"ENTER: {request.method}")
-    return "HELLO !"
+    return "HELLO - wrong port !"
 
 @api_blueprint.route("/favicon.ico", methods=["POST", "GET", "OPTIONS"])
 def favicon():
@@ -40,32 +40,6 @@ def embed_and_store():
 def handle_query():
     if request.method == "OPTIONS":  # To make flask_cors handle the preflight -> Work on it
         return {}, 200 
-    # try:
-    #     question = request.json["question"]
-    #     print(f"Question from FRONT received in the BACK : {question}")
-    #     chat_history = request.json["chatHistory"]
-    #     context_chunks = pinecone_service.get_most_similar_chunks_for_query(
-    #         question, PINECONE_INDEX_NAME
-    #     )
-    #     # print(f"CONTEXT CHUNCK in the BACK : {context_chunks}")
-    #     messages = openAI_service.construct_llm_payload(question, context_chunks, chat_history)
-    #     def generate():
-    #         client = OpenAI()
-    #         response = client.completions.create(
-    #             model=CHATGPT_MODEL,
-    #             prompt=messages,
-    #             temperature=1,
-    #             max_tokens=500,
-    #             n=1,
-    #             presence_penalty=0,
-    #             frequency_penalty=0.1,
-    #             stop=["\n", " Human:", " AI:"])
-    #         answer = response.choices[0].text.strip()
-    #         print(f"RESPONSE from OPENAI : {answer}")
-    #         yield f"data: {{\"text\": \"{answer}\"}}\n\n"
-    #     return Response(generate(), content_type='text/event-stream')
-    # except Exception as e:
-    #     return Response(f"data: {{\"error\": \"{str(e)}\"}}\n\n", content_type='text/event-stream')
 
 @api_blueprint.route("/delete-index", methods=["POST", "OPTIONS"])
 def delete_index():

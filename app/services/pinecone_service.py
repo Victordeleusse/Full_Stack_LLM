@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
-PINECONE_API_KEY='54cfd832-9a97-4589-ac31-100881fb8111'
+PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
+# PINECONE_API_KEY='54cfd832-9a97-4589-ac31-100881fb8111'
 pc = Pinecone(api_key=PINECONE_API_KEY, environment="gcp-starter")
 EMBEDDING_DIMENSION = 1536
 MAX_ATTEMPTS = 5
@@ -20,12 +20,12 @@ def safe_request(chunk):
     for attempt in range(MAX_ATTEMPTS):
         try:
             embedding = get_embedding(chunk)
-            print(f"In SAFE REQUEST EMBEDDING : {embedding}")
+            print("Embedding data ...")
             return embedding
         # except openai.error.RateLimitError as e:
         except Exception as e:
             error_message = str(e)
-            print(f"ERROR while embedding : {error_message}, let s wait for 20+ secs")
+            print(f"ERROR while embedding : {error_message}, please wait")
             exponential_backoff(attempt)
 
 def embed_chunks_and_upload_to_pinecone(chunks, index_name):
