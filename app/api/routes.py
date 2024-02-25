@@ -4,16 +4,26 @@ from app.services import openAI_service, pinecone_service, scrapping_service
 from app.utils.utils_functions import *
 from openai import OpenAI
 
+
 PINECONE_INDEX_NAME = "index42"
+
+@api_blueprint.route("/", methods=["POST", "GET", "OPTIONS"])
+def home():
+    print(f"ENTER: {request.method}")
+    return "HELLO MTF"
+
+@api_blueprint.route("/favicon.ico", methods=["POST", "OPTIONS"])
+def favicon():
+    return '', 204
 
 @api_blueprint.route("/embed-and-store", methods=["POST", "OPTIONS"])
 def embed_and_store():
     if request.method == "OPTIONS":  # Let flask_cors handle the preflight
         return {}, 200  
 
-    print("ENDPOINT embed-and-store reached")
-    print("Headers:", request.headers)
-    print("Data:", request.data)
+    # print("ENDPOINT embed-and-store reached")
+    # print("Headers:", request.headers)
+    # print("Data:", request.data)
     try:
         url = request.json.get("url")
         print(f"URL : {url}")
