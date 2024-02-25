@@ -1,0 +1,23 @@
+.urlinput {
+	margin-top: 20px;
+}
+
+.welcome-banner {
+	background-color: rgba(144, 238, 144, 0.5);
+	width: 100%;
+	height: 20%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.welcome-banner p {
+	font-size: 1.5rem; 
+	color: #333; 
+}
+
+.url-input {
+	width: 100%; 
+	margin-bottom: 10px; 
+}

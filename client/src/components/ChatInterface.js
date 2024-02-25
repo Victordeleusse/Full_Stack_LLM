@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ChatMessage from './ChatMessage';
 import io from 'socket.io-client';
+import './ChatInterface.css';
 
 const socket = io('http://localhost:5000');
 
@@ -47,7 +48,9 @@ function ChatInterface() {
 
   return (
     <div className="chat-container">
-      <header className="chat-header">Chat with Bot</header>
+      <header className="chat-header">
+        <div className="centered-header">Chat with Bot</div>
+      </header>
       <div className="chat-messages">
         {messages.map((message, index) => (
           <ChatMessage key={index} message={message} />
@@ -57,7 +60,7 @@ function ChatInterface() {
       <form className="chat-input" onSubmit={handleSendMessage}>
         <input
           type="text"
-          placeholder="Type a question and press enter ..."
+          placeholder="Please, send your question"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           required
