@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: app/Dockerfile
+    restart: always
     volumes:
       - ./app:/app/app
       - ./run.py:/app/run.py
@@ -20,6 +21,7 @@ services:
   client:
     build:
       context: ./client
+    restart: always
     volumes:
       - ./client/src:/app/src
       - ./client/public:/app/public
@@ -27,3 +29,5 @@ services:
       - "3000:3000"
     depends_on:
       - app
+    environment:
+      - HOST=0.0.0.0
