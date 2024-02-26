@@ -2,8 +2,8 @@ from flask import Flask
 from flask_cors import CORS
 from app.api.routes import api_blueprint
 from flask_socketio import SocketIO, emit
-
-from app.services import openAI_service, pinecone_service, scrapping_service
+import os
+from app.services import openAI_service, pinecone_service
 from app.utils.utils_functions import *
 from openai import OpenAI
 
@@ -15,6 +15,8 @@ def create_app():
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
     app.register_blueprint(api_blueprint)
     socketio.init_app(app) 
+    debug_mode = os.environ.get('FLASK_DEBUG', 'false').lower() in ['true', '1', 't']
+    app.debug = debug_mode
     return app, socketio
 
 @socketio.on('connect')
@@ -34,8 +36,7 @@ def handle_message(data):
 @socketio.on('send_question')
 def handle_question(data):
     question = data['question']
-    chat_history = data['chatHistory']
-    print(f"CHAT HISTORY : {chat_history}")
+    chat_history = data['chatHistory'][-5:]
     context_chunks = pinecone_service.get_most_similar_chunks_for_query(question, PINECONE_INDEX_NAME)
     messages = openAI_service.construct_llm_payload(question, context_chunks, chat_history)
     client = OpenAI()

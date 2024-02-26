@@ -4,7 +4,8 @@ import requests
 from app.utils.utils_functions import *
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-OPENAI_EMBEDDING_MODEL = "text-embedding-ada-002"
+# OPENAI_EMBEDDING_MODEL = "text-embedding-ada-002"
+OPENAI_EMBEDDING_MODEL = "text-embedding-3-small"
 OPENAI_URL_EMBEDDING = "https://api.openai.com/v1/embeddings"
 CHATGPT_MODEL = "gpt-3.5-turbo-instruct"
 
@@ -23,8 +24,8 @@ def get_embedding(chunk):
 def construct_llm_payload(question, context_chunks, chat_history):
     prompt = build_prompt(question, context_chunks)
     print("\n==== PROMPT ====\n")
-    print(prompt)
+    # print(prompt)
     messages = construct_messages_list(chat_history, prompt)
-    print("\n==== MESSAGES ====\n")
-    print(messages)
-    return messages
+    # print("\n==== PROMPT ====\n")
+    # print(messages)
+    return prompt

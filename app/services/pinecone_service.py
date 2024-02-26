@@ -2,9 +2,9 @@ import os
 from pinecone import Pinecone, ServerlessSpec, PodSpec
 from app.services.openAI_service import *
 import time
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
 
 PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
 pc = Pinecone(api_key=PINECONE_API_KEY, environment="gcp-starter")
@@ -18,10 +18,10 @@ def exponential_backoff(attempt):
 def safe_request(chunk):
     for attempt in range(MAX_ATTEMPTS):
         try:
-            embedding = get_embedding(chunk)
             print("Embedding data ...")
+            embedding = get_embedding(chunk)
+            
             return embedding
-        # except openai.error.RateLimitError as e:
         except Exception as e:
             error_message = str(e)
             print(f"ERROR while embedding : {error_message}, please wait")

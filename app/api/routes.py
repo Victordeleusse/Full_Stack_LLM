@@ -1,9 +1,7 @@
 from . import api_blueprint
-from flask import Response, request, jsonify
-from app.services import openAI_service, pinecone_service, scrapping_service
+from flask import request, jsonify
+from app.services import pinecone_service, scrapping_service
 from app.utils.utils_functions import *
-from openai import OpenAI
-
 
 PINECONE_INDEX_NAME = "index42"
 

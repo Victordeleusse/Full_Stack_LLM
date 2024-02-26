@@ -2,7 +2,9 @@
 
 **__Full-stack LLM application with OpenAI, Flask, React, and Pinecone__**
 
-This is a sample application built to allow a user to input a URL and ask questions about the content of that webpage. It demonstrates the use of **Retrieval Augmented Generation**, **OpenAI**, and **vector databases**.
+This is a sample application built to allow a user to input a URL and ask questions about the content of that webpage. It demonstrates the use of **Retrieval Augmented Generation**, **OpenAI**, and **vector databases**. 
+
+*Please, be aware that this is a development server. Do not use it in a production deployment.*
 
 ## Architecture
 ![Architecture](LLM_app_organisation.png)
@@ -12,7 +14,7 @@ This is a sample application built to allow a user to input a URL and ask questi
 * **OpenAI**: We'll call two different API's from OpenAI: (1) the Embeddings API to embed the text of the website as well as the user's question, and (2) the ChatCompletions API to get an answer from GPT-3 to send back to the user.
 *  **Pinecone**: This is the vector database that we'll use to (1) send the embeddings of the website's text to, and (2) retrieve the most similar text chunks for constructing the prompt to send to the LLM in step 3.
 *  **Frontend (React)**: This is the interface that the user interacts with to input a URL and ask questions about the webpage.
-*  **SocketIO**: To allow communication between Frontend and Backend
+*  **SocketIO**: To allow communication between Frontend and Backend.
 
 ## Setup
 

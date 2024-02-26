@@ -9,6 +9,7 @@ services:
     volumes:
       - ./app:/app/app
       - ./run.py:/app/run.py
+      - ./app/init.sh:/app/init.sh
     env_file:
       - .env
     ports:
