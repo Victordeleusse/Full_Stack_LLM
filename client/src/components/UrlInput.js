@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './UrlInput.css';
+import '../styles/UrlInput.css';
 
 function UrlInput({ onSubmit }) {
   const [url, setUrl] = useState('');

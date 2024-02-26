@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ChatMessage from './ChatMessage';
 import io from 'socket.io-client';
-import './ChatInterface.css';
+import '../styles/ChatInterface.css';
 
 const socket = io('http://localhost:5000');
 
