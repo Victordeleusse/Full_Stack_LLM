@@ -22,6 +22,7 @@ This is a sample application built to allow a user to input a URL and ask questi
 ```
 OPENAI_API_KEY=<YOUR_API_KEY>
 PINECONE_API_KEY=<YOUR_API_KEY>
+FLASK_DEBUG=true
 ```
 
 ### Start the app
