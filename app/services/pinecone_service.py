@@ -46,6 +46,7 @@ def embed_chunks_and_upload_to_pinecone(chunks, index_name):
     embeddings_with_ids = []
     for i, chunk in enumerate(chunks):
         embedding = safe_request(chunk)
+        print(f"Vector embedded : {embedding}")
         embeddings_with_ids.append((str(i), embedding, chunk))
     # Pairing embeddings and relevant texts both with id association
     print("\nUploading chunks to Pinecone ...")

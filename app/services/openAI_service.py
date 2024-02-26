@@ -24,4 +24,7 @@ def construct_llm_payload(question, context_chunks, chat_history):
     prompt = build_prompt(question, context_chunks)
     print("\n==== PROMPT ====\n")
     print(prompt)
-    return prompt
+    messages = construct_messages_list(chat_history, prompt)
+    print("\n==== MESSAGES ====\n")
+    print(messages)
+    return messages
