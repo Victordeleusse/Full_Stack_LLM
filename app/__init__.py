@@ -35,6 +35,7 @@ def handle_message(data):
 def handle_question(data):
     question = data['question']
     chat_history = data['chatHistory']
+    print(f"CHAT HISTORY : {chat_history}")
     context_chunks = pinecone_service.get_most_similar_chunks_for_query(question, PINECONE_INDEX_NAME)
     messages = openAI_service.construct_llm_payload(question, context_chunks, chat_history)
     client = OpenAI()

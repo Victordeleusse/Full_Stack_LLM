@@ -20,8 +20,6 @@ def get_embedding(chunk):
     embedding = response_json["data"][0]["embedding"]
     return embedding
 
-
-# Need to run openai migration HERE !
 def construct_llm_payload(question, context_chunks, chat_history):
     prompt = build_prompt(question, context_chunks)
     print("\n==== PROMPT ====\n")

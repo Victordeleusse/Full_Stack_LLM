@@ -38,7 +38,7 @@ def embed_and_store():
 # Build the prompt for the LLM and sending it to the API -> answer.
 @api_blueprint.route("/handle-query", methods=["POST", "OPTIONS"])
 def handle_query():
-    if request.method == "OPTIONS":  # To make flask_cors handle the preflight -> Work on it
+    if request.method == "OPTIONS":  # To make flask_cors handle the preflight -> Work on POST with Socket
         return {}, 200 
 
 @api_blueprint.route("/delete-index", methods=["POST", "OPTIONS"])

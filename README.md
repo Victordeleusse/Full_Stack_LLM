@@ -27,3 +27,11 @@ PINECONE_API_KEY=<YOUR_API_KEY>
 docker-compose up --build
 ```
 
+## Documentation
+
+### Embeddings
+https://platform.openai.com/docs/guides/embeddings
+
+### RAG (What Is Retrieval-Augmented Generation ?)
+https://blogs.nvidia.com/blog/what-is-retrieval-augmented-generation/
+
